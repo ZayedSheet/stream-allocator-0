@@ -1,0 +1,11 @@
+sheetz, zayed, sheet, male, 10.5, software, electrical, materials
+    
+yazdinip, pedram, yazdinia, male, 10.8, software, electrical, civil
+mohinderk, mohinder, kahl, ale, 2.44, chemical, civil, engphys  
+dominikb, dominik, buszowiecki, male, 11.5, software, chemical, electrical
+valkirf, farzad, valkir, male, 3.2, mechanical, electrical, software
+gonzalc, cat, gonzal, female, 6.0, mechanical, electrical, materials
+mustafah, mustafa, hula, male, 10.9, software, civil
+jordans, jordan, samson, male, 10.2, civil, electrical, software
+
+

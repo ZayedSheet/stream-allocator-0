@@ -1,0 +1,180 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{indentfirst}
+
+\oddsidemargin 0mm
+\evensidemargin 0mm
+\textwidth 160mm
+\textheight 200mm
+
+\pagestyle {plain}
+\pagenumbering{arabic}
+
+\newcounter{stepnum}
+
+\title{Assignment 1 Report}
+\author{Zayed Sheet, Sheetz}
+\date{\today}
+
+\begin {document}
+
+\maketitle
+
+The following document is a thorough report on the 2AA4 Assignment 1. The purpose of this software design exercise is to write a python program that uses three modules named ReadAllocationData.py, CalcModule.py and testCalc.py to take an input of students in first year engineering and place them in one of their desired programs of choice depending on whether they meet the requirements for that program.
+
+\section{Testing of the Original Program}
+
+When creating my test cases, the first thing I did was try to cover all the basic cases that essentially assess the correctness of the code.
+These basic cases would have expected inputs and expected outputs to test the basic functionality of the code. 
+I then added some cases that test the robustness of the program by essentially trying to break the code with unexpected inputs. 
+For example, cases where the inputs would contain empty lists, empty dictionaries or unrecognized string literals. My test cases go as follows:
+
+\bigskip
+While developing my test cases, the only issue I ran into was an unexpected output due to one of my global variables being changed in another test case.
+Other than that every test case passed, presumably because I was testing my code as I was writing it, and because my insight didn't really change much while writing my test cases, since writing my code. My test cases go as follows:
+
+\begin{enumerate}
+   \item sortList
+
+The purpose of this test case is to test the basic functionality of the sort function. A list of dictionaries is passed into the function and the expected output is a list of dictionaries sorted by the 'gpa' key in descending order.
+   \item emptySortAllocate
+
+This test case tests the robustness of the program when empty parameters are passed in. There are two parts to this test case. First it checks if the sort function works when an empty list is passed in. The expected output for this is an empty list. If this works then it checks if the allocate function works when the parameters are empty. Because the allocate function takes several parameters, the test case checks three different combinations of parameters to see if it still works when one parameter is empty but others are not. The reason I combined two test cases in this function is because if the sort case fails, then the allocate function will fail anyways.  
+   \item emptyGender
+
+This test case tests what happens if an empty list is passed into the average function. The rationale being that the user may have entered the wrong list as an input but the program should still run without error.
+   \item wrongGender
+
+This test case tests how the program handles unexpected inputs. In this test case the gender parameter into the average function is 'test' rather than 'male' or 'female'. The rationale behind this is in-case the programer or user mistypes male or female or enters any other input for the gender parameter. The expected output is -1.
+   \item zeroGender
+
+The purpose for this test case is to see what happens when the list of students doesn't have a single 'male' and/or 'female'. For example, if all the students were male but female is passed into the function to test for the average gpa. The rationale behind this test case is to ensure there is no zero by division error despite there being a reasonable input. The expected output is -1.
+   \item allPassAllocate
+
+This is one of many test cases to test the basic functionality of the allocate function. I created several test cases for allocate to pinpoint where the problem is if an error did occur. This as well as the rest of my test cases are to test for correctness because the allocate function has several aspects to it. In this test case all students pass and are allocated to their first choice. There are no capacities or free choice students.
+   \item failAllocate
+
+In this test case some students fail, and therefore should not be present in the list outputted by the function. This test case tests if the program still works when students fail. There are no free choice students, no capacity and everyone gets their first choice if they passed.
+   \item freeChoiceAllocate
+
+In this test there are free choice students, all students are allocated, capacities are limited however all students pass. Free choice students should always get their first choice and should be entered into their program before other students. Subsequently, some of the programs will fill up meaning some students will not get their first or sometimes even their second choice.
+   \item controlledAllocate
+
+This case essentially tests for the complete correctness of the allocate function by testing every aspect of it. In this test case there are free choice students who will get their choice first, some students fail and some students may pass however will not be allocated because all three of their choice are full. 
+\end{enumerate}
+
+In order for all test cases to pass, many assumptions were made regarding the program's inputs and expected behavior. An example of an assumption would be that the input for department capacities and students are in a specific format in the text file or that the programmer will type input strings correctly for functions such as average.
+
+\bigskip
+First and foremost, I assumed that most attributes for a student are entered in the input text files correctly since many of these are computerized. For example, a lot of the information McMaster has of a student is taken from your application to McMaster, where the student's choices are entered by picking from a list or checking check boxes. This means items such as gender can't be misspelled. It also means that a list will always have most attributes of a student because in the application you can't proceed unless you've entered all the required information. Essentially the only information I assumed could be missing is if a student only made one instead of three choices for their engineering streams (because this was allowed when I was picking my streams in my first year of engineering). I made sure to check for this in my program.
+
+\bigskip
+I also made sure free choice students ALWAYS get their first choice since it is guaranteed to them within their admission letter. This means I must assume that there won't be more people with free choice picking a stream than there is capacity in that stream. 
+
+\bigskip
+I also assumed that mutating variables within functions was okay because its helpful to know the current value of the variables throughout the program. For example, I mutated the list of students so that if one gets allocated I removed them from the list. This way, once the program is done going through the list we can see if any student was unaccounted for by checking if the list is empty or not. 
+
+\bigskip
+Another assumption I made was that the average male or female gpa could not possibly be equal or less than zero or there was an error in the inputs. To avoid a division by zero error my program always checks if the gpa is zero or less before dividing. The rationale behind this is that if it is zero, then either the gender inputted is unrecognized or there were no male and/or female students in the list. In a program with 800 students its impossible that zero of them are male or zero are female. You can also assume the user wont intentionally use the function to check the gpa of a list of zero students because they would know the gpa is zero. This must mean that there is an error in the inputs, and therefore the program still runs smoothly and lets the user know that there is an error.
+
+
+
+\section{Results of Testing Partner's Code}
+\begin{enumerate}
+   \item sortList Passed
+   \item emptySortAllocate
+   \begin{itemize}
+     \item Sort Passed
+     \item Allocate Exception Raised
+   \end{itemize}
+   \item emptyGender Exception Raised
+   \item wrongGender Exception Raised
+   \item zeroGender Exception Raised
+   \item AllPassAllocate Passed
+   \item failAllocate Sometimes Passed, Sometimes Failed
+   \item freeChoiceAllocate Sometimes Passed, Sometimes Failed
+   \item controlledAllocate Failed
+\end{enumerate}
+
+
+\section{Discussion of Test Results}
+
+After running my partner's test results, only a few passed with most receiving an exception error and two failing. The exception raises, despite being failures, are not problems with my partner's code. They're just another way of handling specific situations. For example in my test case when an empty list is passed into the average function the test case expects an output of -1. The output here can be arbitrary as long as the program knows something went wrong. In my partner's program an exception was raised which is simply another means of handling the error based off of different assumptions. For the failAllocate and freeChoiceAllocate sometimes they pass and sometimes they fail. This is because my partner shuffles free choice students so sometimes the lists outputted are in different order, however his output is always still correct. The controlledAllocate function is the only one that constantly fails and this is because of a difference in assumption where my partner gives the user a random eng stream if all their departments are full whereas I just printed everyone who wasn't allocated in a text file. 
+
+After testing my code aswell as my partners, I gained a broader insight on the excercise, and I learned how to better make assumptions and test cases in the future. For my allocate function, the controlledAllocate test case is enough to test the full correctness of the code. However, I made four different test cases so that I can better pinpoint what the problem is when an error does occur. However because my test cases sometimes incorporated more than one feature of the program it was still difficult to pinpoint what went wrong when the last two test cases failed with my partner's files. This taught me to make my test cases much more specific.  
+
+\subsection{Problems with Original Code}
+
+There are a couple of problems that I saw with my code. First, I didn't have any error handling in case a student in the free choice list is not present in the students list. This could be a potential error in the inputs where perhaps the wrong file is used or something is misspelled in the free choice list. Another error with my code is that I didnt make some of my error handling outputs very specific. For example if an unrecognized gender, empty list or a list with zero of a particular gender is entered. It would be better to make it more specific so the user knows exactly whats going on. 
+
+\subsection{Problems with Partner's Code}
+
+One of the design aspects that I would disagree with in my partners program is that the code stops running and raises an exception when something unexpected happens even though the program could still run. For example if a free choice student is not in the list of students an exception is raised when a print statement would suffice, and the program could keep running. I believe this will increase the reliability of the code. I also believe it would have been useful to store the list of students who failed and a list of students who didn't get any of their three choices just so the user has more background on what's happening when the program is running. 
+
+Another problem I see in my partner's code are unnecessary steps that just increase the running time of the program. For example in line 126 of CalcModule.py my partner shuffles his list and then sorts it immediately after. Another inefficient thing my partner did was store the dictionaries of all free choice students in a list and then add them to the beginning of his sorted student list. Ideally what you would want to do is store the free choice students immediately so you don't have to loop through them a second time, and even better would be to look for students who failed while already looping through the list looking for students with free choice. Even his specific implementation could have been better. In line 138 Instead of looping through EVERY student he could have just checked for the first student with below a 4.0 gpa then stopped looping since the list is sorted so you know everyone else failed. 
+\section{Critique of Design Specification}
+
+I liked how this assignment left a lot of the design decisions open ended but at the same time left a basic structure to follow to complete the assignment. This allowed me to be more creative with the ways I handled the problems and it allowed me to solve the problem in ways that are most suited to my way of thinking. 
+
+Although this benefited me personally as it made the assignment more enjoyable overall, I would propose changing the design of the assignment to be in a more formal specification than a natural language. The ambiguity in this assignment caused a lot of assumptions to be made which might not be ideal in the real world. In the real world you'd most likely want as little ambiguity as possible that way the programmer can do exactly what is being asked.
+%\newpage
+
+\section{Answers to Questions}
+
+\begin{enumerate}[(a)]
+
+\item To make the average(L, g) function more general you can give it other capabilities specifically allowing it to take in other parameters instead of just male and female. You could have it return the gpa of students based off other input parameters (ex. have it return the average GPA of students who picked software as their first choice). In the opposite sense, you could also allow the function to output something else rather than gpa (for example the number of 'male' students who picked software as their first choice). This would require another input parameter. You can make sort(S) more general in a similar way by allowing the function to sort the list based off something other than gpa (ex. sort the list alphabetically based on the students name. This would also require another input parameter. 
+
+\item In this context aliasing essentially means creating another name for a peice of data. For example when you set a variable equal to a dictionary it does't copy the dictionary, it just gives it another name. Therefore changing that variable will change the original dictionary. Because dictionaries are mutable then this can be a concern with dictionaries. To guard against this problem you can use the .copy method and set a variable equal to the copy of a dictionary rather than the dictionary its self. 
+
+\item Aside from basic cases that test for the correctness of the code, I would add some test cases that test for unexpected inputs such as empty files, files with random white spaces/blank lines or files with incorrect formats. I believe CalcModule.py was selected over ReadAllocationData.py mainly because the way the files were formatted would vary greatly between students and therefore most test cases will fail with your partner's files. CalcModule is a lot more standardized with its inputs and would therefore be better to test. 
+
+\item The problems with using strings in this way is that typing mistakes in spelling, capatalization or input type (ex int, string etc)  could cause the code to break. This puts extra responsibility on the programmer to either type the strings correctly, or include error checking in their code. A better approach would be if the data structure you use helped avoid this issue. You could replace \{"male", "female"\} with an enumerated type, \{male, female\} to reduce problems. Better yet you could use \{m, f\} to reduce spelling errors or capitalization errors as male can be typed Male, MALE or male. A better implementation for department names would be named tuples rather than dictionary with strings as these are very readable and flexible structures and can be accessed in many different ways and therefore is less prone to error. 
+
+\item Some of the other options of implementing the mathematical notation of a tuple is to use the built-in tuple, writing a custom class or using built-in classes. A good option for implementing a tuple in python would be to use named tuples. This would be a better choice than a dictionary with strings because its a very readable and flexible structure. Named tuples are also immutable and therefore you don't have to worry about aliasing while creating your program. It's also better than dictionaries in the sense that it makes the data passed around in your program "self-documenting" making it easier to read and follow along with whats happenning in your code. An example of how I would change my program would be to make department names a named tuple rather than a dictionary with strings. To implement this change I would have to create a named tuple class for programs with each program containing its own data. I'd then have to access each one differently than I did in my if statements by doing firstchoice.capacity for example. 
+
+\item If I changed the list to a a different data structure then I would have to make slight changes such as indexing when trying to retreive data from the data structure. Other than that I wouldn't have to change anything else in my code because CalcModule.py for the most part is used to read data and because I'm not changing the list of choices in any way then using a tuple shouldn't be a problem. If the CalcModule.py had an ADT where the class provides a method that returns the next choice and another method that returns True when there are no more choices, if the data structure inside the custom class was changed to tuples rather than lists then assuming the same methods are available for the custom class then no you wouldn't have to change anything in CalcModule.py. Because you're just accessing the next choice and not modifying it then it should still work in the same way.
+\end{enumerate}
+
+\newpage
+
+\lstset{language=Python, basicstyle=\tiny, breaklines=true, showspaces=false,
+  showstringspaces=false, breakatwhitespace=true}
+%\lstset{language=C,linewidth=.94\textwidth,xleftmargin=1.1cm}
+
+\def\thesection{\Alph{section}}
+
+\section{Code for ReadAllocationData.py}
+
+\noindent \lstinputlisting{../src/ReadAllocationData.py}
+
+\newpage
+
+\section{Code for CalcModule.py}
+
+\noindent \lstinputlisting{../src/CalcModule.py}
+
+\newpage
+
+\section{Code for testCalc.py}
+
+\noindent \lstinputlisting{../src/testCalc.py}
+
+\newpage
+
+\section{Code for Partner's CalcModule.py}
+
+\noindent \lstinputlisting{../partner/CalcModule.py}
+
+\newpage
+
+\section{Makefile}
+
+\lstset{language=make}
+\noindent \lstinputlisting{../Makefile}
+
+\end {document}
